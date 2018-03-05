@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Slab');
+
+body {
+  background-image: url("images/power-hour-bg.jpeg");
+  background-position: center;
+  background-size: cover;
+  font-family: 'Roboto Slab', Helvetica, serif;
+}
+
+input {
+  width: 200px;
+  height: 25px;
+  margin: 8px;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #c3c3c3;
+  border-radius: 4px;
+  font-family: 'Roboto Slab', Helvetica, serif;
+}
+
+input#submit {
+  padding: inherit;
+  background-color: #157df5;
+  border: none;
+  color: #ffffff
+}
+
+.booyah-box {
+  min-width: 150px;
+  max-width: 300px;
+  text-align: center;
+  float: right;
+  background-color: rgba(255, 255, 255, 0.5);
+  /*box-shadow: 1px 1px 5px grey;*/
+  border-color: #e4e4e4 #bebebd #bebebd #e4e4e4;
+  margin-top: 225px;
+  margin-bottom: auto;
+  margin-right: 65px;
+  padding: 20px;
+  font-weight: bold;
+}
