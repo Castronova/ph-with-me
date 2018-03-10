@@ -8,3 +8,8 @@ class LoginForm(Form):
     name = StringField('Name', validators=[Required()])
     room = StringField('Room', validators=[Required()])
     submit = SubmitField('Enter Power Hour Chatroom')
+
+class TimerForm(Form):
+    start = SubmitField('Start')
+    timer = StringField('TIMER HERE')
+
