@@ -1,18 +1,31 @@
 
 // set initial value for the minutes variable
 var Minutes = -1;
+var timer_running = null;
+var current_min = null;
+var current_sec = null;
 
 $(document).ready(function() {
 
     // timer function
     function startTimer(duration, display) {
         var timer = duration, minutes, seconds;
+	timer_running = 1;
+	intervalID = null;
         var refresh = setInterval(function () {
             minutes = parseInt(timer / 60, 10)
             seconds = parseInt(timer % 60, 10);
 
             minutes = minutes < 10 ? "0" + minutes : minutes;
             seconds = seconds < 10 ? "0" + seconds : seconds;
+	    
+	    // exit if "stop" was pressed
+	    if (!timer_running){
+		console.log('clearing interval')
+		current_min = minutes
+		current_sec = seconds
+		clearInterval(intervalID);
+	    }
 
             var output = minutes + " : " + seconds;
             display.text(output);
@@ -53,14 +66,23 @@ $(document).ready(function() {
         document.body.style.backgroundColor = '#ffffff';
     }
 
-
+    
     // start timer
     jQuery(function ($) {
         if (Minutes > 0) {
+	    timer_running = 1;
             var display = $('#time');
             startTimer(Minutes, display);
         }
     });
+
+    // stop timer
+    jQuery(function ($) {
+        if (Minutes > 0) {
+	    timer_running = 0;
+        }
+    });
+
 
     // show help information
     $('#help-info').hide();

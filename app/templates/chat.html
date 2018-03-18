@@ -9,6 +9,7 @@
         <h1>Power Hour with Friends</h1>
         <h3>Welcome {{ form.name }}!</h3>
         <h3>You are in chat room "{{ form.room }}"</h3>
+	<b>{{form.admin}}</b> created this room and has admin rights.
 		
 		<!-- TIMER OBJECT -->
         <div class="timer">
@@ -21,10 +22,21 @@
         
         <br /><br />
 
-		<form method="POST" action="{{ url_for('main.hours', num=1) }}" style="display:inline">
-			<input type="submit" value="START">
-		</form>
 
+	<!-- display admin functions -->
+	{% if form.admin == form.name %} 
+	 
+	<form method="POST" action="{{ url_for('main.hours', num=1) }}" style="display:inline">
+	    <input type="submit" value="START">
+    	</form>
+	<form method="POST" action="{{ url_for('main.hours', num=1) }}" style="display:inline">
+	    <input type="submit" value="STOP">
+    	</form>
+	<form method="POST" action="{{ url_for('main.kill') }}" style="display:inline">
+	    <input type="submit" value="KILL CHAT">
+    	</form>
+
+	{% endif %}
         <br /><br />
 
 
