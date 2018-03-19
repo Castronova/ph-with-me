@@ -28,3 +28,10 @@ def left(message):
     room = session.get('room')
     leave_room(room)
     emit('status', {'msg': session.get('name') + ' left'}, room=room)
+
+@socketio.on('timer', namespace='/chat')
+def text(message):
+    """Sent by a client when the timer is updated.
+    The timer is update for all people in the room."""
+    room = session.get('room')
+    emit('timerupdate', {'msg': message}, room=room)

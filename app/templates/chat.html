@@ -5,6 +5,7 @@
 {% endblock %}
 
 
+
 {% block page_content %}
         <h1>Power Hour with Friends</h1>
         <h3>Welcome {{ form.name }}!</h3>
@@ -13,8 +14,8 @@
 		
 		<!-- TIMER OBJECT -->
         <div class="timer">
-		    <p id="time"></p>
-		</div>
+	    <p id="time"></p>
+	</div>
 
         <textarea id="chat" cols="80" rows="20"></textarea><br><br>
         <input id="text" size="80" placeholder="Enter your message here"><br><br>
@@ -25,7 +26,11 @@
 
 	<!-- display admin functions -->
 	{% if form.admin == form.name %} 
-	 
+	<input id=startph type="submit" value="START" onclick="startTimer(3600)"/>
+	<input id=pauseph type="submit" value="PAUSE" onclick="pause()"/>
+	<input id=resetph type="submit" value="RESET" onclick="reset()"/>
+
+	{#
 	<form method="POST" action="{{ url_for('main.hours', num=1) }}" style="display:inline">
 	    <input type="submit" value="START">
     	</form>
@@ -35,7 +40,7 @@
 	<form method="POST" action="{{ url_for('main.kill') }}" style="display:inline">
 	    <input type="submit" value="KILL CHAT">
     	</form>
-
+	#}
 	{% endif %}
         <br /><br />
 
