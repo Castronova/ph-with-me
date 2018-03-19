@@ -65,9 +65,17 @@ def get_session_data():
 
 @main.route("/chat/timer/", methods=['GET', 'POST'])
 def timer():
+    """
+    end point for starting the PH timer
+    """
     if request.method == 'POST':
+        # send text to screen to indicate that the timer has started.
         flash('Timer Started')
+
+    # get session data and pass it back to the template
     data = get_session_data()
+
+    # redirect to the mytimer function 
     return redirect(url_for('main.mytimer', num=25*60, form=data))
 
 
