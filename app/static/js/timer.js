@@ -2,92 +2,116 @@
 // set initial value for the minutes variable
 var socket;
 var Minutes = -1;
-var timer_running = null;
+//var timer_running = null;
 var current_min = null;
 var current_sec = null;
 var display; 
+var timerInterval = null;
+
+var _timer = -999;
 
 $(document).ready(function() {
 
     // set the timer element for later
-    display = $('#time');
+    display = $("#time");
 
     // connect to the chat socket
-    socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
-    
+    socket = io.connect("http://" + document.domain + ":" + location.port + "/chat");
+
     // enable/disable the admin buttons, timer not running
-    enablebuttons(false)
+    enablebuttons(false);
 
     // SocketIO handlers for sharing messages with the chatroom
-    socket.on('timerupdate', function(data) {
-	text = data.msg;
-	$('#time').text(text);
+    socket.on("timerupdate", function(data) {
+    text = data.msg;
+    $("#time").text(text);
     });
 
 });
 
-// timer function
-function startTimer(minutes) {
+var timerLoop = function () {
 
-    // enable/disable the admin buttons, timer not running
-    enablebuttons(true)
-
-    var timer = minutes, seconds;
-    timer_running = 1;
-    intervalID = null;
-    var refresh = setInterval(function () {
-        minutes = parseInt(timer / 60, 10)
-        seconds = parseInt(timer % 60, 10);
+        minutes = parseInt(_timer / 60, 10);
+        seconds = parseInt(_timer % 60, 10);
 
         minutes = minutes < 10 ? "0" + minutes : minutes;
         seconds = seconds < 10 ? "0" + seconds : seconds;
-        
-        // exit if "stop" was pressed
-        if (!timer_running){
-    	console.log('clearing interval')
-    	current_min = minutes
-    	current_sec = seconds
-    	clearInterval(intervalID);
-        }
 
-	// send the updated time to the chat room via server/events
+
+        // send the updated time to the chat room via server/events
         var output = minutes + " : " + seconds;
-	socket.emit('timer', output);
+        socket.emit("timer", output);
         $("title").html(output + " - TimerTimer");
 
         // flash screen every minute
-        if (minutes != '59') {
-            var flash_ints = ['01', '00', '59'];
+        if (minutes != "59") {
+            var flash_ints = ["01", "00", "59"];
         } else {
-            var flash_ints = ['01', '00'];
+            var flash_ints = ["01", "00"];
         }
-        
-        if (minutes.toString() != '60') {
+
+        if (minutes.toString() != "60") {
             if(flash_ints.indexOf(seconds.toString()) != -1) {
                 console.log(seconds);
                 flash();
             }
         }
 
-
-	// decrement the timer
-        if (--timer < 0) {
-	    // DO SOMETHING WHEN THE TIMER RUNS OUT	
+        // decrement the timer
+        if (--_timer < 0) {
+        // DO SOMETHING WHEN THE TIMER RUNS OUT 
             display.text("Time's Up!");
             clearInterval(refresh);  // exit refresh loop
             var music = $("#over_music")[0];
                 music.play();
              alert("Time's Up!");
          }
-     }, 1000);
+     };
+
+// timer function
+function startTimer(seconds) {
+
+
+    // enable/disable the admin buttons, timer IS running
+    enablebuttons(true);
+
+    // start the timer for the first time
+    if (_timer == -999){
+        
+        // set the global timer object that will be used inside the timer interval
+        _timer = seconds;
+    
+        // start the timer interval
+        timerInterval = setInterval(timerLoop, 1000);
+    } 
+    else { // restart the timer
+
+        // start the timer interval
+        timerInterval = setInterval(timerLoop, 1000);
+    }
  }
 
 function pause() {
-    alert('paused')
+    
+    // stop the timer
+    clearInterval(timerInterval);
+        
+    // enable/disable the admin buttons, timer is NOT running
+    enablebuttons(false);
+}
+
+function reset() {
+    alert("Implement me!");
 }
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function flash() {
+    document.body.style.backgroundColor = "#f00";
+    await sleep(200);
+    document.body.style.backgroundColor = "#ffffff";
 }
 
 function enablebuttons(timer_running) {
@@ -95,26 +119,21 @@ function enablebuttons(timer_running) {
     // based on whether or not the timer is running.
 
     if (timer_running){
-	$('#startph').attr("disabled",true);
-	$('#pauseph').attr("disabled",false);
-	$('#resetph').attr("disabled",false);
+        $("#startph").attr("disabled",true);
+        $("#pauseph").attr("disabled",false);
+        $("#resetph").attr("disabled",false);
     } else {
-	$('#startph').attr("disabled",false);
-	$('#pauseph').attr("disabled",true);
-	$('#resetph').attr("disabled",true);
+        $("#startph").attr("disabled",false);
+        $("#pauseph").attr("disabled",true);
+        $("#resetph").attr("disabled",true);
     }
-}
-async function flash() {
-    document.body.style.backgroundColor = '#f00';
-    await sleep(200);
-    document.body.style.backgroundColor = '#ffffff';
 }
 
     
 // stop timer
 jQuery(function ($) {
     if (Minutes > 0) {
-	timer_running = 0;
+    timer_running = 0;
     }
 });
 
